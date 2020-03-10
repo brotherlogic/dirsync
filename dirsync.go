@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/resolver"
 
+	pb "github.com/brotherlogic/dirsync/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
 )
 
@@ -22,6 +23,7 @@ func init() {
 //Server main server type
 type Server struct {
 	*goserver.GoServer
+	syncs []*pb.Sync
 }
 
 // Init builds the server
@@ -54,7 +56,9 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
-	return []*pbg.State{}
+	return []*pbg.State{
+		&pbg.State{Key: "syncs", Text: fmt.Sprintf("%v", s.syncs)},
+	}
 }
 
 func main() {

@@ -1,25 +1,21 @@
 syntax = "proto3";
 
-package logging;
+package dirsync;
 
-message Log {
-  string origin = 1;
-  string server = 2;
-  string log = 3;
-  int64 timestamp = 4;
-  int32 ttl = 5;
+message Sync {
+  string dir = 1;
+  string subdir = 2;
+  repeated string servers = 3;
+  int64 last_sync_time = 4;
+  repeated int64 time_to_sync = 5;
 }
 
-message LogList {
-  repeated Log logs = 1;
+message AddSyncRequest {
+  Sync to_add = 1;
 }
 
-message LogRequest {
-  Log log = 1;
-}
+message AddSyncResponse {}
 
-message LogResponse {}
-
-service LoggingService {
-  rpc Log(LogRequest) returns (LogResponse) {};
+service DirsyncService {
+  rpc AddSync(AddSyncRequest) returns (AddSyncResponse) {};
 }
