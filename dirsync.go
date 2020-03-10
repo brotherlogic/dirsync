@@ -20,6 +20,11 @@ func init() {
 	resolver.Register(&utils.DiscoveryServerResolverBuilder{})
 }
 
+const (
+	// CONFIG - Where we store syncs
+	CONFIG = "/github.com/brotherlogic/dirsync/config"
+)
+
 //Server main server type
 type Server struct {
 	*goserver.GoServer
@@ -36,7 +41,7 @@ func Init() *Server {
 
 // DoRegister does RPC registration
 func (s *Server) DoRegister(server *grpc.Server) {
-
+	pb.RegisterDirsyncServiceServer(server, s)
 }
 
 // ReportHealth alerts if we're not healthy
@@ -47,6 +52,18 @@ func (s *Server) ReportHealth() bool {
 //Shutdown the server
 func (s *Server) Shutdown(ctx context.Context) error {
 	return nil
+}
+
+func (s *Server) load(ctx context.Context) (*pb.Config, error) {
+	data, _, err := s.KSclient.Read(ctx, CONFIG, &pb.Config{})
+	if err != nil {
+		return nil, err
+	}
+	return data.(*pb.Config), nil
+}
+
+func (s *Server) save(ctx context.Context, config *pb.Config) error {
+	return s.KSclient.Save(ctx, CONFIG, config)
 }
 
 // Mote promotes/demotes this server
