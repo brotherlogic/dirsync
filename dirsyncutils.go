@@ -33,7 +33,7 @@ func (s *Server) runSyncEvent(ctx context.Context, ev *pb.Sync) error {
 	}
 
 	bestI := 0
-	bestJ := 0
+	bestJ := 1
 	for i := 0; i < len(ev.GetServers()); i++ {
 		for j := 0; j < len(ev.GetServers()); j++ {
 			if i != j {
