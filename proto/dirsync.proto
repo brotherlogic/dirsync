@@ -2,6 +2,10 @@ syntax = "proto3";
 
 package dirsync;
 
+message Config {
+  repeated Sync syncs = 1;
+}
+
 message Sync {
   string dir = 1;
   string subdir = 2;
@@ -11,7 +15,7 @@ message Sync {
 }
 
 message AddSyncRequest {
-  Sync to_add = 1;
+  Sync sync = 1;
 }
 
 message AddSyncResponse {}
