@@ -98,5 +98,7 @@ func main() {
 		return
 	}
 
+	server.RegisterServingTask(server.hydrate, "hydrate")
+
 	fmt.Printf("%v", server.Serve())
 }

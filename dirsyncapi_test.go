@@ -7,12 +7,14 @@ import (
 	"github.com/brotherlogic/keystore/client"
 
 	pb "github.com/brotherlogic/dirsync/proto"
+	dpb "github.com/brotherlogic/discovery/proto"
 )
 
 //InitTestServer gets a test version of the server
 func InitTestServer() *Server {
 	s := Init()
 	s.SkipLog = true
+	s.Registry = &dpb.RegistryEntry{Name: "testserver"}
 	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
 	s.GoServer.KSclient.Save(context.Background(), CONFIG, &pb.Config{})
 	return s
