@@ -13,6 +13,23 @@ message Sync {
   repeated string servers = 3;
   int64 last_sync_time = 4;
   repeated int64 time_to_sync = 5;
+  repeated SyncEvent events = 6;
+}
+
+message SyncEvent {
+  string from_server = 1;
+  string to_server = 2;
+
+  enum SyncState {
+    UNKNOWN = 0;
+    IDLE = 1;
+    IN_SYNC = 2;
+    COMPLETE = 3;
+  }
+
+  SyncState state = 3;
+  int64 start_time = 4;
+  int64 end_time = 5;
 }
 
 message AddSyncRequest {

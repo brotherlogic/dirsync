@@ -29,7 +29,8 @@ const (
 //Server main server type
 type Server struct {
 	*goserver.GoServer
-	config *pb.Config
+	config   *pb.Config
+	lastSync string
 }
 
 // Init builds the server
@@ -81,6 +82,11 @@ func (s *Server) GetState() []*pbg.State {
 	}
 }
 
+func (s *Server) runTimedSync(ctx context.Context) (time.Time, error) {
+	err := s.runSync(ctx)
+	return time.Now().Add(time.Minute * 5), err
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -100,6 +106,7 @@ func main() {
 	}
 
 	server.RegisterRepeatingTaskNonMaster(server.hydrate, "hydrate", time.Minute*5)
+	server.RegisterLockingTask(server.runTimedSync, "run_timed_sync")
 
 	fmt.Printf("%v", server.Serve())
 }
