@@ -18,13 +18,13 @@ func (s *Server) hydrate(ctx context.Context) error {
 		if err == nil {
 			found := false
 			for _, server := range sync.GetServers() {
-				if server == s.Registry.Name {
+				if server == s.Registry.Identifier {
 					found = true
 				}
 			}
 
 			if !found {
-				sync.Servers = append(sync.Servers, s.Registry.Name)
+				sync.Servers = append(sync.Servers, s.Registry.Identifier)
 				change = true
 			}
 		}
