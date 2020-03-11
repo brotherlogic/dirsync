@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"time"
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
@@ -29,13 +28,14 @@ const (
 //Server main server type
 type Server struct {
 	*goserver.GoServer
-	syncs []*pb.Sync
+	config *pb.Config
 }
 
 // Init builds the server
 func Init() *Server {
 	s := &Server{
 		GoServer: &goserver.GoServer{},
+		config:   &pb.Config{},
 	}
 	return s
 }
@@ -58,8 +58,9 @@ func (s *Server) Shutdown(ctx context.Context) error {
 func (s *Server) load(ctx context.Context) (*pb.Config, error) {
 	data, _, err := s.KSclient.Read(ctx, CONFIG, &pb.Config{})
 	if err != nil {
-		return &pb.Config{LastRun: time.Now().Unix()}, s.save(ctx, &pb.Config{LastRun: time.Now().Unix()})
+		return nil, err
 	}
+	s.config = data.(*pb.Config)
 	return data.(*pb.Config), nil
 }
 
@@ -75,7 +76,7 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
 	return []*pbg.State{
-		&pbg.State{Key: "syncs", Text: fmt.Sprintf("%v", s.syncs)},
+		&pbg.State{Key: "syncs", Text: fmt.Sprintf("%v", s.config.GetSyncs())},
 	}
 }
 

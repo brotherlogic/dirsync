@@ -3,3 +3,4 @@ dirsync
 .test
 
 *.txt
+dirsync_cli/dirsync_cli
