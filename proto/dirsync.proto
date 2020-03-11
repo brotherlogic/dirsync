@@ -4,6 +4,7 @@ package dirsync;
 
 message Config {
   repeated Sync syncs = 1;
+  int64 last_run = 2;
 }
 
 message Sync {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"time"
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
@@ -57,7 +58,7 @@ func (s *Server) Shutdown(ctx context.Context) error {
 func (s *Server) load(ctx context.Context) (*pb.Config, error) {
 	data, _, err := s.KSclient.Read(ctx, CONFIG, &pb.Config{})
 	if err != nil {
-		return nil, err
+		return &pb.Config{LastRun: time.Now().Unix()}, s.save(ctx, &pb.Config{LastRun: time.Now().Unix()})
 	}
 	return data.(*pb.Config), nil
 }

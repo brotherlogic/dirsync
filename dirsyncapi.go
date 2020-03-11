@@ -17,7 +17,7 @@ func (s *Server) AddSync(ctx context.Context, req *pb.AddSyncRequest) (*pb.AddSy
 		}
 	}
 
-	config.Syncs = append(config.Syncs, req.GetSync())
+	config.Syncs = append(config.GetSyncs(), req.GetSync())
 
 	return &pb.AddSyncResponse{}, s.save(ctx, config)
 }
