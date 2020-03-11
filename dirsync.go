@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"time"
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
@@ -80,6 +81,25 @@ func (s *Server) GetState() []*pbg.State {
 	}
 }
 
+func (s *Server) clean(ctx context.Context) error {
+	config, err := s.load(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, sy := range config.GetSyncs() {
+		servers := make([]string, 0)
+		for _, ser := range sy.GetServers() {
+			if ser != s.Registry.Name {
+				servers = append(servers, ser)
+			}
+		}
+		sy.Servers = servers
+	}
+
+	return s.save(ctx, config)
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -98,7 +118,8 @@ func main() {
 		return
 	}
 
-	server.RegisterServingTask(server.hydrate, "hydrate")
+	server.RegisterRepeatingTaskNonMaster(server.hydrate, "hydrate", time.Minute*5)
+	server.RegisterRepeatingTaskNonMaster(server.clean, "clean", time.Minute)
 
 	fmt.Printf("%v", server.Serve())
 }
