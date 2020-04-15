@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package dirsync;
 
+option go_package = ".;dirsync";
+
 message Config {
   repeated Sync syncs = 1;
   int64 last_run = 2;
