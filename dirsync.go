@@ -105,7 +105,7 @@ func main() {
 		return
 	}
 
-	server.RegisterRepeatingTaskNonMaster(server.hydrate, "hydrate", time.Minute*5)
+	server.RegisterRepeatingTaskNonMaster(server.hydrate, "hydrate", time.Hour)
 	server.RegisterLockingTask(server.runTimedSync, "run_timed_sync")
 
 	fmt.Printf("%v", server.Serve())

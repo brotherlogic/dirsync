@@ -46,7 +46,6 @@ func (s *Server) runSyncEvent(ctx context.Context, ev *pb.Sync) error {
 		}
 	}
 
-	s.Log(fmt.Sprintf("Running sync on %v -> %v", ev.GetServers()[bestI], ev.GetServers()[bestJ]))
 	s.lastSync = fmt.Sprintf("%v -> %v", ev.GetServers()[bestI], ev.GetServers()[bestJ])
 	return nil
 }
